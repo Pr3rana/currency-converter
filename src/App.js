@@ -41,7 +41,7 @@ function App() {
     .catch(error => {
       console.error("Snapped while fetching base data!!!",'\n', error)
     })
-  },[])
+  },[BASE_URL,API_KEY])
 
 //fetch exchange-rate as per base currency
   useEffect(() => {
@@ -52,7 +52,7 @@ function App() {
         console.error("Snapped while fetching exchange rate!!!", '\n', error)
       })
     }
-  }, [fromCurrencyType, toCurrencyType])
+  }, [fromCurrencyType, toCurrencyType,BASE_URL,API_KEY])
 
   const filterDataForCurrentCurrency = useCallback((data)=>{
     let chartData = []
@@ -80,7 +80,7 @@ useEffect(()=>{
       console.error("Snapped while fetching historical data!!!", '\n', error)
     })
   }
-},[fromCurrencyType, toCurrencyType,filterDataForCurrentCurrency])
+},[fromCurrencyType, toCurrencyType,filterDataForCurrentCurrency,BASE_URL,API_KEY])
 
 
 //handle change of FROM dropdown
