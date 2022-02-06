@@ -14,9 +14,11 @@ function App() {
   const [labels, setLabels] = useState([])
   const [chartData, setChartData] = useState([])
 
-  const BASE_URL = process.env.REACT_APP_BASE_URL
-  const API_KEY = process.env.REACT_APP_API_KEY
-  const currentDateTime = new Date().toString() 
+  const BASE_URL = "https://freecurrencyapi.net/api/v2/"
+  const API_KEY = "33f603a0-86a2-11ec-b7aa-9ba767ba326a"
+
+
+  const currentDateTime = new Date().toString()
 
   let toAmount ,fromAmount
   if (isAmountInFromCurrency) {
@@ -41,7 +43,7 @@ function App() {
     .catch(error => {
       console.error("Snapped while fetching base data!!!",'\n', error)
     })
-  },[BASE_URL,API_KEY])
+  },[])
 
 //fetch exchange-rate as per base currency
   useEffect(() => {
@@ -52,7 +54,7 @@ function App() {
         console.error("Snapped while fetching exchange rate!!!", '\n', error)
       })
     }
-  }, [fromCurrencyType, toCurrencyType,BASE_URL,API_KEY])
+  }, [fromCurrencyType, toCurrencyType])
 
   const filterDataForCurrentCurrency = useCallback((data)=>{
     let chartData = []
@@ -80,7 +82,7 @@ useEffect(()=>{
       console.error("Snapped while fetching historical data!!!", '\n', error)
     })
   }
-},[fromCurrencyType, toCurrencyType,filterDataForCurrentCurrency,BASE_URL,API_KEY])
+},[fromCurrencyType, toCurrencyType,filterDataForCurrentCurrency])
 
 
 //handle change of FROM dropdown
