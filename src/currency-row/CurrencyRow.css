@@ -1,0 +1,17 @@
+.currency-input, select{
+    width: 10em;
+    border: .1em solid #333 ;
+    border-radius: .3em;
+}
+select{
+    padding: .75rem;
+}
+select:active, select:hover, select:focus {
+    outline: none
+  }
+.currency-input{
+    padding: .8rem;
+}
+.currency-selector{
+    margin-left: .5em;
+}
