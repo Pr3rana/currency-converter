@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import CurrencyRow from './currency-row/CurrencyRow'
 import LineChart from './line-chart/LineChart'
 import './App.css';
@@ -14,13 +14,10 @@ function App() {
   const [labels, setLabels] = useState([])
   const [chartData, setChartData] = useState([])
 
-  const BASE_URL = "https://freecurrencyapi.net/api/v2/"
-  const API_KEY = "33f603a0-86a2-11ec-b7aa-9ba767ba326a"
+  const BASE_URL = process.env.REACT_APP_BASE_URL
+  const API_KEY = process.env.REACT_APP_API_KEY
+  const currentDateTime = new Date().toString() 
 
-
-  const currentDateTime = new Date().toString()
-
-  //conversion calculation
   let toAmount ,fromAmount
   if (isAmountInFromCurrency) {
     fromAmount = inputAmount
@@ -42,7 +39,7 @@ function App() {
       setToCurrencyType(firstCurrency)
     })
     .catch(error => {
-      console.log("Snapped while fetching base data!!!")
+      console.error("Snapped while fetching base data!!!",'\n', error)
     })
   },[])
 
@@ -52,10 +49,18 @@ function App() {
       fetch(`${BASE_URL}latest?apikey=${API_KEY}&base_currency=${fromCurrencyType}`).then(response=>response.json())
       .then(data => setExchangeRate(data.data[toCurrencyType]))
       .catch(error => {
-        console.log("Snapped while fetching exchange rate!!!")
+        console.error("Snapped while fetching exchange rate!!!", '\n', error)
       })
     }
   }, [fromCurrencyType, toCurrencyType])
+
+  const filterDataForCurrentCurrency = useCallback((data)=>{
+    let chartData = []
+    for(let key in data){
+      chartData.push(data[key][toCurrencyType])
+    }
+    return chartData
+  },[toCurrencyType])
 
 
 //fetch historic data
@@ -68,17 +73,14 @@ useEffect(()=>{
     fetch(`${BASE_URL}historical?apikey=${API_KEY}&base_currency=${fromCurrencyType}&date_from=${fromDate}&date_to=${todayDate}`).then(response=>response.json())
     .then(data => {
       setLabels([...Object.keys(data.data)])
-      let chartData = []
-      for(let key in data.data){
-        chartData.push(data[key][toCurrencyType])
-      }
-      setChartData(chartData)
+      const dataForCurrentCurrency = filterDataForCurrentCurrency(data.data)
+      setChartData(dataForCurrentCurrency)
     })
     .catch(error => {
-      console.log("Snapped while fetching historical data!!!")
+      console.error("Snapped while fetching historical data!!!", '\n', error)
     })
   }
-},[fromCurrencyType, toCurrencyType])
+},[fromCurrencyType, toCurrencyType,filterDataForCurrentCurrency])
 
 
 //handle change of FROM dropdown
