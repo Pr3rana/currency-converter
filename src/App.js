@@ -100,7 +100,7 @@ useEffect(()=>{
   return (
     <>
     <div className="converter-wrapper">
-    <h1>Convert</h1>
+    <h1>Currency converter</h1>
     <p>{currentDateTime}</p>
     <CurrencyRow selectedCurrencyType={fromCurrencyType} 
         availableCurrencyList={availableCurrencyList}
